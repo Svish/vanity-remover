@@ -1,4 +1,4 @@
-﻿namespace VanityRemover
+﻿namespace FolderVanityRemover
 {
     partial class MainForm
     {
@@ -65,7 +65,7 @@
             // 
             this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGo.Image = global::VanityRemover.Properties.Resources.control_play;
+            this.btnGo.Image = global::FolderVanityRemover.Properties.Resources.control_play;
             this.btnGo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnGo.Location = new System.Drawing.Point(135, 116);
             this.btnGo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -81,7 +81,7 @@
             // 
             this.btnSourceFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSourceFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSourceFolder.Image = global::VanityRemover.Properties.Resources.folder_explore;
+            this.btnSourceFolder.Image = global::FolderVanityRemover.Properties.Resources.folder_explore;
             this.btnSourceFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSourceFolder.Location = new System.Drawing.Point(135, 11);
             this.btnSourceFolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

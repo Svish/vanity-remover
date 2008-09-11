@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Drawing;
 
-namespace VanityRemover
+namespace FolderVanityRemover
 {
     public class VanitySettings : ApplicationSettingsBase
     {

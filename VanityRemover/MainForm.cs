@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-namespace VanityRemover
+namespace FolderVanityRemover
 {
     public partial class MainForm : Form
     {
