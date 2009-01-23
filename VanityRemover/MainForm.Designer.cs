@@ -32,8 +32,8 @@
             this.folderTextbox = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lblDrop = new System.Windows.Forms.Label();
-            this.btnGo = new System.Windows.Forms.Button();
-            this.btnSourceFolder = new System.Windows.Forms.Button();
+            this.goButton = new System.Windows.Forms.Button();
+            this.folderButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
@@ -61,40 +61,40 @@
             this.lblDrop.TabIndex = 3;
             this.lblDrop.Text = "(Or drop one here)";
             // 
-            // btnGo
+            // goButton
             // 
-            this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGo.Image = global::FolderVanityRemover.Properties.Resources.control_play;
-            this.btnGo.Location = new System.Drawing.Point(12, 116);
-            this.btnGo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(27, 22);
-            this.btnGo.TabIndex = 7;
-            this.btnGo.Tag = "";
-            this.btnGo.UseVisualStyleBackColor = true;
-            this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
+            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.goButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.goButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.goButton.Location = new System.Drawing.Point(12, 116);
+            this.goButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.goButton.Name = "goButton";
+            this.goButton.Size = new System.Drawing.Size(27, 22);
+            this.goButton.TabIndex = 7;
+            this.goButton.Tag = "";
+            this.goButton.UseVisualStyleBackColor = true;
+            this.goButton.Click += new System.EventHandler(this.btnGo_Click);
             // 
-            // btnSourceFolder
+            // folderButton
             // 
-            this.btnSourceFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSourceFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSourceFolder.Image = global::FolderVanityRemover.Properties.Resources.folder_explore;
-            this.btnSourceFolder.Location = new System.Drawing.Point(178, 11);
-            this.btnSourceFolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnSourceFolder.Name = "btnSourceFolder";
-            this.btnSourceFolder.Size = new System.Drawing.Size(27, 22);
-            this.btnSourceFolder.TabIndex = 2;
-            this.btnSourceFolder.UseVisualStyleBackColor = true;
-            this.btnSourceFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
+            this.folderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.folderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.folderButton.Location = new System.Drawing.Point(178, 11);
+            this.folderButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.folderButton.Name = "folderButton";
+            this.folderButton.Size = new System.Drawing.Size(27, 22);
+            this.folderButton.TabIndex = 2;
+            this.folderButton.UseVisualStyleBackColor = true;
+            this.folderButton.Click += new System.EventHandler(this.btnChooseFolder_Click);
             // 
-            // progressBar1
+            // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(45, 116);
-            this.progressBar.Name = "progressBar1";
-            this.progressBar.Size = new System.Drawing.Size(160, 22);
+            this.progressBar.Location = new System.Drawing.Point(45, 117);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(160, 20);
             this.progressBar.TabIndex = 8;
             // 
             // backgroundWorker
@@ -109,9 +109,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(217, 151);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.btnGo);
+            this.Controls.Add(this.goButton);
             this.Controls.Add(this.lblDrop);
-            this.Controls.Add(this.btnSourceFolder);
+            this.Controls.Add(this.folderButton);
             this.Controls.Add(this.folderTextbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -135,10 +135,10 @@
         #endregion
 
         private System.Windows.Forms.TextBox folderTextbox;
-        private System.Windows.Forms.Button btnSourceFolder;
+        private System.Windows.Forms.Button folderButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Label lblDrop;
-        private System.Windows.Forms.Button btnGo;
+        private System.Windows.Forms.Button goButton;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
     }

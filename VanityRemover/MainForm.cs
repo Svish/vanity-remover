@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
+using System.Reflection;
+using System.Drawing;
 
 namespace FolderVanityRemover
 {
-    public partial class MainForm : Form
+    partial class MainForm : Form
     {
         /// <summary>
         /// Constructor
@@ -30,6 +27,12 @@ namespace FolderVanityRemover
         /// </summary>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // Load images
+            Assembly a = Assembly.GetExecutingAssembly();
+            folderButton.Image = new Bitmap(a.GetManifestResourceStream("FolderVanityRemover.Icons.folder.png"));
+            goButton.Image = new Bitmap(a.GetManifestResourceStream("FolderVanityRemover.Icons.go.png"));
+            
+            // Load settings
             settings = new VanitySettings();
             folderTextbox.DataBindings.Add("Text", settings, "LastFolder");
         }

@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace FolderVanityRemover
 {
-    public class VanitySettings : ApplicationSettingsBase
+    class VanitySettings : ApplicationSettingsBase
     {
         [UserScopedSetting()]
         [DefaultSettingValue("")]
