@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\app.ico" />
-    <Content Include="ScreenShot.png" />
+    <Content Include="Screenshot.png" />
     <None Include="app.config" />
     <None Include="VanityRemoverKey.snk" />
     <EmbeddedResource Include="Icons\go.png" />
