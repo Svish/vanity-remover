@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
-using System.Windows.Forms;
-using System.Reflection;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Security;
+using System.Windows.Forms;
 
 namespace FolderVanityRemover
 {
@@ -52,7 +53,7 @@ namespace FolderVanityRemover
         {
             folderBrowserDialog.ShowNewFolderButton = false;
 
-            if (folderTextbox.Text != "")
+            if (!String.IsNullOrEmpty(folderTextbox.Text))
                 folderBrowserDialog.SelectedPath = folderTextbox.Text;
 
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -112,7 +113,7 @@ namespace FolderVanityRemover
                 DeleteEmpty(di);
                 return;
             }
-            MessageBox.Show("Folder does not exist");
+            MessageBox.Show("Folder does not exist", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -142,9 +143,17 @@ namespace FolderVanityRemover
                     // Increase counter
                     DeletedFolders++;
                 }
-                catch (Exception) 
+                catch (DirectoryNotFoundException)
                 {
-                    // Ignore folders that could not be deleted                
+                    // Already gone for some reason...
+                }
+                catch (IOException)
+                {
+                    // Not empty...
+                }
+                catch (SecurityException)
+                {
+                    // Not permission to delete...
                 }
             }
         }
@@ -155,7 +164,7 @@ namespace FolderVanityRemover
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             progressBar.Style = ProgressBarStyle.Blocks;
-            MessageBox.Show(String.Format("Done. {0} folders were removed.", DeletedFolders));
+            MessageBox.Show(DeletedFolders + " folders were removed.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
