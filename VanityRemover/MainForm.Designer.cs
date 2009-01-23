@@ -44,9 +44,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.folderTextbox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.folderTextbox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.folderTextbox.Location = new System.Drawing.Point(12, 12);
+            this.folderTextbox.Location = new System.Drawing.Point(6, 7);
             this.folderTextbox.Name = "folderTextbox";
-            this.folderTextbox.Size = new System.Drawing.Size(160, 20);
+            this.folderTextbox.Size = new System.Drawing.Size(178, 20);
             this.folderTextbox.TabIndex = 0;
             // 
             // lblDrop
@@ -55,7 +55,7 @@
             this.lblDrop.AutoSize = true;
             this.lblDrop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDrop.ForeColor = System.Drawing.Color.Gray;
-            this.lblDrop.Location = new System.Drawing.Point(49, 65);
+            this.lblDrop.Location = new System.Drawing.Point(52, 53);
             this.lblDrop.Name = "lblDrop";
             this.lblDrop.Size = new System.Drawing.Size(117, 16);
             this.lblDrop.TabIndex = 3;
@@ -63,13 +63,12 @@
             // 
             // goButton
             // 
-            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.goButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
             this.goButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.goButton.Location = new System.Drawing.Point(12, 116);
-            this.goButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.goButton.Location = new System.Drawing.Point(6, 96);
             this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(27, 22);
+            this.goButton.Size = new System.Drawing.Size(27, 24);
             this.goButton.TabIndex = 7;
             this.goButton.Tag = "";
             this.goButton.UseVisualStyleBackColor = true;
@@ -80,10 +79,9 @@
             this.folderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
             this.folderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.folderButton.Location = new System.Drawing.Point(178, 11);
-            this.folderButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.folderButton.Location = new System.Drawing.Point(190, 4);
             this.folderButton.Name = "folderButton";
-            this.folderButton.Size = new System.Drawing.Size(27, 22);
+            this.folderButton.Size = new System.Drawing.Size(27, 24);
             this.folderButton.TabIndex = 2;
             this.folderButton.UseVisualStyleBackColor = true;
             this.folderButton.Click += new System.EventHandler(this.btnChooseFolder_Click);
@@ -92,9 +90,9 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(45, 117);
+            this.progressBar.Location = new System.Drawing.Point(39, 98);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(160, 20);
+            this.progressBar.Size = new System.Drawing.Size(178, 20);
             this.progressBar.TabIndex = 8;
             // 
             // backgroundWorker
@@ -107,7 +105,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(217, 151);
+            this.ClientSize = new System.Drawing.Size(222, 126);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.lblDrop);
@@ -117,7 +115,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(225, 175);
+            this.MinimumSize = new System.Drawing.Size(230, 150);
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
