@@ -1,79 +1,78 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
-using System.Reflection;
-using System.Security;
+using System.Threading;
 using System.Windows.Forms;
 
-namespace FolderVanityRemover
+namespace GeekyProductions.FolderVanityRemover
 {
-    partial class MainForm : Form
+    /// <summary>
+    /// The main and only form of this application.
+    /// </summary>
+    internal partial class MainForm : Form
     {
+        private readonly ICleaner cleaner;
+
         /// <summary>
-        /// Constructor
+        /// Creates a new <see cref="MainForm"/>.
         /// </summary>
         public MainForm()
         {
             InitializeComponent();
+
+            // Set icons
+            Icon = Resources.GetIcon("GeekyProductions.FolderVanityRemover.Icons.app.ico");
+            folderButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.folder.png");
+            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
+
+            // Create cleaner
+            cleaner = new Cleaner(SynchronizationContext.Current);
+            cleaner.CleaningDone += CleaningDone;
+
         }
 
         /// <summary>
-        /// Settings
+        /// Cleaning done
         /// </summary>
-        private VanitySettings settings;
-
-        /// <summary>
-        /// Restore last folder on load
-        /// </summary>
-        private void MainForm_Load(object sender, EventArgs e)
+        private void CleaningDone(object sender, CleaningDoneEventArgs e)
         {
-            // Load images
-            Assembly a = Assembly.GetExecutingAssembly();
-            folderButton.Image = new Bitmap(a.GetManifestResourceStream("FolderVanityRemover.Icons.folder.png"));
-            goButton.Image = new Bitmap(a.GetManifestResourceStream("FolderVanityRemover.Icons.go.png"));
-            
-            // Load settings
-            settings = new VanitySettings();
-            folderTextbox.DataBindings.Add("Text", settings, "LastFolder");
+            progressBar.Style = ProgressBarStyle.Blocks;
+            var m = string.Format("{0} folders scanned.{1}{2} folders removed.",
+                                  e.Total,
+                                  Environment.NewLine,
+                                  e.Deleted);
+
+            MessageBox.Show(m, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            cleanButton.Enabled = true;
+            folderTextbox.Enabled = true;
+            folderButton.Enabled = true;
         }
 
-        /// <summary>
-        /// Save last folder on closing
-        /// </summary>
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            settings.Save();
-        }
 
         /// <summary>
         /// Show folder browser dialog
         /// </summary>
-        private void btnChooseFolder_Click(object sender, EventArgs e)
+        private void folderButtonClick(object sender, EventArgs e)
         {
-            folderBrowserDialog.ShowNewFolderButton = false;
-
-            if (!String.IsNullOrEmpty(folderTextbox.Text))
-                folderBrowserDialog.SelectedPath = folderTextbox.Text;
+            folderBrowserDialog.SelectedPath = folderTextbox.Text;
 
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
                 folderTextbox.Text = folderBrowserDialog.SelectedPath;
-            }
         }
 
         /// <summary>
-        /// Start the background worker
+        /// Start cleaner
         /// </summary>
-        private void btnGo_Click(object sender, EventArgs e)
+        private void cleanButtonClick(object sender, EventArgs e)
         {
-            if (folderTextbox.Text.Length > 0)
-            {
-                progressBar.Style = ProgressBarStyle.Marquee;
-                backgroundWorker.RunWorkerAsync();
-            }
-            else
-                MessageBox.Show("Choose a folder");
+            // Fix UI
+            progressBar.Style = ProgressBarStyle.Marquee;
+            cleanButton.Enabled = false;
+            folderTextbox.Enabled = false;
+            folderButton.Enabled = false;
+
+            // Start cleaner
+            cleaner.Clean(new DirectoryInfo(folderTextbox.Text));
         }
 
         /// <summary>
@@ -83,7 +82,12 @@ namespace FolderVanityRemover
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string filename = (e.Data.GetData(DataFormats.FileDrop) as string[])[0];
+                var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+                if (files == null || files.Length < 1)
+                    return;
+
+                var filename = files[0];
                 if (Directory.Exists(filename))
                     folderTextbox.Text = filename;
             }
@@ -94,77 +98,18 @@ namespace FolderVanityRemover
         /// </summary>
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            DirectoryInfo di = new DirectoryInfo(folderTextbox.Text);
-            if (di.Exists)
-            {
-                DeletedFolders = 0;
-                DeleteEmpty(di);
-                return;
-            }
-            MessageBox.Show("Folder does not exist", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            // Only accept files
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop)
+                           ? DragDropEffects.Link
+                           : DragDropEffects.None;
         }
 
         /// <summary>
-        /// Deleted folders counter.
+        /// Folder text changed
         /// </summary>
-        private static volatile int DeletedFolders;
-
-        /// <summary>
-        /// Deletes a directory if it is empty.
-        /// </summary>
-        /// <param name="directory">Directory to delete if empty.</param>
-        private void DeleteEmpty(DirectoryInfo directory)
+        private void folderTextbox_TextChanged(object sender, EventArgs e)
         {
-            // Run this same method on all directories in this directory
-            foreach (DirectoryInfo d in directory.GetDirectories())
-            {
-                DeleteEmpty(d);
-            }
-            // If directory has no files or folders in it
-            if (directory.GetFileSystemInfos().Length == 0)
-            {
-                try
-                {
-                    // Try to delete
-                    directory.Delete();
-
-                    // Increase counter
-                    DeletedFolders++;
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    // Already gone for some reason...
-                }
-                catch (IOException)
-                {
-                    // Not empty...
-                }
-                catch (SecurityException)
-                {
-                    // Not permission to delete...
-                }
-            }
-        }
-
-        /// <summary>
-        /// Message and progressbar back to normal when completed
-        /// </summary>
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            progressBar.Style = ProgressBarStyle.Blocks;
-            MessageBox.Show(DeletedFolders + " folders were removed.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            cleanButton.Enabled = Directory.Exists(folderTextbox.Text);
         }
     }
 }
