@@ -1,4 +1,4 @@
-﻿namespace FolderVanityRemover
+﻿namespace GeekyProductions.FolderVanityRemover
 {
     partial class MainForm
     {
@@ -28,14 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.folderTextbox = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lblDrop = new System.Windows.Forms.Label();
-            this.goButton = new System.Windows.Forms.Button();
+            this.cleanButton = new System.Windows.Forms.Button();
             this.folderButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // folderTextbox
@@ -48,6 +46,13 @@
             this.folderTextbox.Name = "folderTextbox";
             this.folderTextbox.Size = new System.Drawing.Size(178, 20);
             this.folderTextbox.TabIndex = 0;
+            this.folderTextbox.TextChanged += new System.EventHandler(this.folderTextbox_TextChanged);
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.Description = "Please select the folder to clean:";
+            this.folderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.folderBrowserDialog.ShowNewFolderButton = false;
             // 
             // lblDrop
             // 
@@ -61,18 +66,19 @@
             this.lblDrop.TabIndex = 3;
             this.lblDrop.Text = "(Or drop one here)";
             // 
-            // goButton
+            // cleanButton
             // 
-            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.goButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
-            this.goButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.goButton.Location = new System.Drawing.Point(6, 96);
-            this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(27, 24);
-            this.goButton.TabIndex = 7;
-            this.goButton.Tag = "";
-            this.goButton.UseVisualStyleBackColor = true;
-            this.goButton.Click += new System.EventHandler(this.btnGo_Click);
+            this.cleanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cleanButton.Enabled = false;
+            this.cleanButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.cleanButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cleanButton.Location = new System.Drawing.Point(6, 96);
+            this.cleanButton.Name = "cleanButton";
+            this.cleanButton.Size = new System.Drawing.Size(27, 24);
+            this.cleanButton.TabIndex = 7;
+            this.cleanButton.Tag = "";
+            this.cleanButton.UseVisualStyleBackColor = true;
+            this.cleanButton.Click += new System.EventHandler(this.cleanButtonClick);
             // 
             // folderButton
             // 
@@ -84,21 +90,17 @@
             this.folderButton.Size = new System.Drawing.Size(27, 24);
             this.folderButton.TabIndex = 2;
             this.folderButton.UseVisualStyleBackColor = true;
-            this.folderButton.Click += new System.EventHandler(this.btnChooseFolder_Click);
+            this.folderButton.Click += new System.EventHandler(this.folderButtonClick);
             // 
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(39, 98);
+            this.progressBar.MarqueeAnimationSpeed = 20;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(178, 20);
             this.progressBar.TabIndex = 8;
-            // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -107,12 +109,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(222, 126);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.goButton);
+            this.Controls.Add(this.cleanButton);
             this.Controls.Add(this.lblDrop);
             this.Controls.Add(this.folderButton);
             this.Controls.Add(this.folderTextbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(230, 150);
@@ -121,10 +122,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Folder Vanity Remover";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,9 +135,7 @@
         private System.Windows.Forms.Button folderButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Label lblDrop;
-        private System.Windows.Forms.Button goButton;
+        private System.Windows.Forms.Button cleanButton;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
-
