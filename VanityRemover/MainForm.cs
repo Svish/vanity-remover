@@ -30,24 +30,6 @@ namespace GeekyProductions.FolderVanityRemover
 
         }
 
-        /// <summary>
-        /// Cleaning done
-        /// </summary>
-        private void CleaningDone(object sender, CleaningDoneEventArgs e)
-        {
-            progressBar.Style = ProgressBarStyle.Blocks;
-            var m = string.Format("{0} folders scanned.{1}{2} folders removed.",
-                                  e.Total,
-                                  Environment.NewLine,
-                                  e.Deleted);
-
-            MessageBox.Show(m, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            cleanButton.Enabled = true;
-            folderTextbox.Enabled = true;
-            folderButton.Enabled = true;
-        }
-
 
         /// <summary>
         /// Show folder browser dialog
@@ -67,12 +49,33 @@ namespace GeekyProductions.FolderVanityRemover
         {
             // Fix UI
             progressBar.Style = ProgressBarStyle.Marquee;
-            cleanButton.Enabled = false;
             folderTextbox.Enabled = false;
             folderButton.Enabled = false;
+            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.stop.png");
 
-            // Start cleaner
-            cleaner.Clean(new DirectoryInfo(folderTextbox.Text));
+            // Start cleaner, or cancel if already running.
+            if(!cleaner.Clean(new DirectoryInfo(folderTextbox.Text)))
+                cleaner.Cancel();
+
+        }
+
+
+        /// <summary>
+        /// Cleaning done
+        /// </summary>
+        private void CleaningDone(object sender, CleaningDoneEventArgs e)
+        {
+            progressBar.Style = ProgressBarStyle.Blocks;
+            var m = string.Format("{0} folders scanned.{1}{2} folders removed.",
+                                  e.Total,
+                                  Environment.NewLine,
+                                  e.Deleted);
+
+            MessageBox.Show(m, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            folderTextbox.Enabled = true;
+            folderButton.Enabled = true;
+            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
         }
 
         /// <summary>

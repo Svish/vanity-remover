@@ -80,6 +80,7 @@ namespace GeekyProductions.FolderVanityRemover
         {
             totalCount = 0;
             deletedCount = 0;
+            cancel = false;
 
             DeleteEmpty(directory as DirectoryInfo);
 
@@ -96,10 +97,21 @@ namespace GeekyProductions.FolderVanityRemover
 
         private void DeleteEmpty(DirectoryInfo directory)
         {
+            if(cancel)
+                return;
+            
+            totalCount++;
+
             // Run this same method on all directories in this directory
-            foreach (var d in directory.GetDirectories())
+            try
             {
-                DeleteEmpty(d);
+                foreach (var d in directory.GetDirectories())
+                    DeleteEmpty(d);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                System.Diagnostics.Debug.WriteLine("No permission: " + directory.FullName);
+                return;
             }
 
             // If directory has no files or folders in it
@@ -112,6 +124,8 @@ namespace GeekyProductions.FolderVanityRemover
 
                     // Increase counter
                     deletedCount++;
+
+                    System.Diagnostics.Debug.WriteLine("Deleted: " + directory.FullName);
                 }
                 catch (DirectoryNotFoundException)
                 {
@@ -126,8 +140,6 @@ namespace GeekyProductions.FolderVanityRemover
                     // Not permission to delete...
                 }
             }
-
-            totalCount++;
         }
     }
 }
