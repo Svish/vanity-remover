@@ -26,7 +26,10 @@ namespace Geeky.VanityRemover
             cleanButton.Image = Resources.Go;
 
             // Create cleaner
-            cleaner = new Cleaner(SynchronizationContext.Current);
+            cleaner = new Cleaner
+                          {
+                              Context = SynchronizationContext.Current,
+                          };
             cleaner.CleaningDone += CleaningDone;
 
         }

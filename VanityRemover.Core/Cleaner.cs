@@ -9,15 +9,15 @@ namespace Geeky.VanityRemover.Core
     /// <summary>
     /// Cleans out empty directories.
     /// </summary>
-    public class Cleaner : ICleaner
+    public class Cleaner : ICleaner, ISynchronizationAware
     {
         // Events
         private event EventHandler<CleaningDoneEventArgs> CleaningDone = (s, e) => { };
 
         // Threading
-        private Thread cleaningThread;
-        private readonly SynchronizationContext context;
         private readonly object padLock = new object();
+        private SynchronizationContext context;
+        private Thread cleaningThread;
 
         // Control
         private volatile bool cancel;
@@ -28,17 +28,28 @@ namespace Geeky.VanityRemover.Core
         private volatile uint deletedCount;
 
 
+
         /// <summary>
         /// Creates a new <see cref="Cleaner"/>.
         /// </summary>
-        /// <param name="context"><see cref="SynchronizationContext"/> to use when
-        /// raising events. If <c>null</c> no synchronization will be used.</param>
-        public Cleaner(SynchronizationContext context)
+        public Cleaner()
         {
-            this.context = context ?? new SynchronizationContext();
+            context = new SynchronizationContext();
             isCleaning = false;
             cancel = false;
         }
+
+
+        #region ISynchronizationAware Members
+
+        public SynchronizationContext Context
+        {
+            get { return context; }
+            set { context = value ?? new SynchronizationContext(); }
+        }
+
+        #endregion
+
 
 
         #region ICleaner Members
