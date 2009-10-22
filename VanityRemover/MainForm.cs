@@ -20,7 +20,7 @@ namespace GeekyProductions.FolderVanityRemover
             InitializeComponent();
 
             // Set icons
-            Icon = Resources.GetIcon("GeekyProductions.FolderVanityRemover.Icons.app.ico");
+            Icon = Resources.GetIcon("GeekyProductions.FolderVanityRemover.Icons.trash.png");
             folderButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.folder.png");
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
 
@@ -53,6 +53,9 @@ namespace GeekyProductions.FolderVanityRemover
             folderButton.Enabled = false;
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.stop.png");
 
+            AcceptButton = null;
+            CancelButton = cleanButton;
+
             // Start cleaner, or cancel if already running.
             if(!cleaner.Clean(new DirectoryInfo(folderTextbox.Text)))
                 cleaner.Cancel();
@@ -76,6 +79,9 @@ namespace GeekyProductions.FolderVanityRemover
             folderTextbox.Enabled = true;
             folderButton.Enabled = true;
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
+
+            AcceptButton = cleanButton;
+            CancelButton = null;
         }
 
         /// <summary>

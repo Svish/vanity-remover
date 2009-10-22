@@ -62,16 +62,16 @@
             this.lblDrop.ForeColor = System.Drawing.Color.Gray;
             this.lblDrop.Location = new System.Drawing.Point(52, 53);
             this.lblDrop.Name = "lblDrop";
-            this.lblDrop.Size = new System.Drawing.Size(117, 16);
+            this.lblDrop.Size = new System.Drawing.Size(114, 16);
             this.lblDrop.TabIndex = 3;
-            this.lblDrop.Text = "(Or drop one here)";
+            this.lblDrop.Text = "(Give me a folder)";
             // 
             // cleanButton
             // 
             this.cleanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cleanButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cleanButton.Enabled = false;
             this.cleanButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
-            this.cleanButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cleanButton.Location = new System.Drawing.Point(6, 96);
             this.cleanButton.Name = "cleanButton";
             this.cleanButton.Size = new System.Drawing.Size(27, 24);
@@ -84,7 +84,6 @@
             // 
             this.folderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
-            this.folderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.folderButton.Location = new System.Drawing.Point(190, 4);
             this.folderButton.Name = "folderButton";
             this.folderButton.Size = new System.Drawing.Size(27, 24);
@@ -104,6 +103,7 @@
             // 
             // MainForm
             // 
+            this.AcceptButton = this.cleanButton;
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
