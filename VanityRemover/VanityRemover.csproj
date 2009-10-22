@@ -67,7 +67,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -86,7 +85,7 @@
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\folder.png" />
+    <EmbeddedResource Include="Icons\browse.png" />
     <EmbeddedResource Include="Icons\go.png" />
     <EmbeddedResource Include="Icons\stop.png" />
     <EmbeddedResource Include="Icons\trash.png" />

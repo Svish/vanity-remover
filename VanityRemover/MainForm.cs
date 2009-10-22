@@ -21,7 +21,7 @@ namespace GeekyProductions.FolderVanityRemover
 
             // Set icons
             Icon = Resources.GetIcon("GeekyProductions.FolderVanityRemover.Icons.trash.png");
-            folderButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.folder.png");
+            browseButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.browse.png");
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
 
             // Create cleaner
@@ -34,7 +34,7 @@ namespace GeekyProductions.FolderVanityRemover
         /// <summary>
         /// Show folder browser dialog
         /// </summary>
-        private void folderButtonClick(object sender, EventArgs e)
+        private void browseButtonClick(object sender, EventArgs e)
         {
             folderBrowserDialog.SelectedPath = folderTextbox.Text;
 
@@ -50,14 +50,14 @@ namespace GeekyProductions.FolderVanityRemover
             // Fix UI
             progressBar.Style = ProgressBarStyle.Marquee;
             folderTextbox.Enabled = false;
-            folderButton.Enabled = false;
+            browseButton.Enabled = false;
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.stop.png");
 
             AcceptButton = null;
             CancelButton = cleanButton;
 
             // Start cleaner, or cancel if already running.
-            if(!cleaner.Clean(new DirectoryInfo(folderTextbox.Text)))
+            if (!cleaner.Clean(new DirectoryInfo(folderTextbox.Text)))
                 cleaner.Cancel();
 
         }
@@ -69,15 +69,11 @@ namespace GeekyProductions.FolderVanityRemover
         private void CleaningDone(object sender, CleaningDoneEventArgs e)
         {
             progressBar.Style = ProgressBarStyle.Blocks;
-            var m = string.Format("{0} folders scanned.{1}{2} folders removed.",
-                                  e.Total,
-                                  Environment.NewLine,
-                                  e.Deleted);
-
-            MessageBox.Show(m, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+            MessageBox.Show(e.ToString(), "Cleaning done", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             folderTextbox.Enabled = true;
-            folderButton.Enabled = true;
+            browseButton.Enabled = true;
             cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
 
             AcceptButton = cleanButton;
