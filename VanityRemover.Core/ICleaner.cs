@@ -9,11 +9,11 @@ namespace Geeky.VanityRemover.Core
     public interface ICleaner
     {
         /// <summary>
-        /// Starts the cleaning of a directory.
+        /// Starts the cleaning of a path.
         /// </summary>
-        /// <param name="directory">Directory to clean</param>
+        /// <param name="path">Path to clean</param>
         /// <returns>False if already busy; otherwise true.</returns>
-        bool Clean(DirectoryInfo directory);
+        bool Clean(string path);
 
         /// <summary>
         /// Asks the cleaning process to cancel.
