@@ -72,9 +72,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cleaner.cs" />
-    <Compile Include="CleaningDoneEventArgs.cs" />
-    <Compile Include="ICleaner.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +122,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VanityRemover.Core\VanityRemover.Core.csproj">
+      <Project>{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}</Project>
+      <Name>VanityRemover.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
