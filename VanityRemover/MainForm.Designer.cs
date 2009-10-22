@@ -1,4 +1,4 @@
-﻿namespace GeekyProductions.FolderVanityRemover
+﻿namespace Geeky.VanityRemover
 {
     partial class MainForm
     {
@@ -60,11 +60,12 @@
             this.lblDrop.AutoSize = true;
             this.lblDrop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDrop.ForeColor = System.Drawing.Color.Gray;
-            this.lblDrop.Location = new System.Drawing.Point(52, 53);
+            this.lblDrop.Location = new System.Drawing.Point(24, 47);
             this.lblDrop.Name = "lblDrop";
-            this.lblDrop.Size = new System.Drawing.Size(114, 16);
+            this.lblDrop.Size = new System.Drawing.Size(175, 32);
             this.lblDrop.TabIndex = 3;
-            this.lblDrop.Text = "(Give me a folder)";
+            this.lblDrop.Text = "Give me a folder and\r\nI will remove the vanity within";
+            this.lblDrop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cleanButton
             // 
@@ -119,7 +120,7 @@
             this.MinimumSize = new System.Drawing.Size(230, 150);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Folder vanity remover";
+            this.Text = "Vanity remover";
             this.TopMost = true;
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);

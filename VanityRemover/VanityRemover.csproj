@@ -8,8 +8,8 @@
     <ProjectGuid>{3CE7740E-AD7C-4C11-A88F-F1FD21FD46BB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeekyProductions.FolderVanityRemover</RootNamespace>
-    <AssemblyName>Folder Vanity Remover</AssemblyName>
+    <RootNamespace>Geeky.VanityRemover</RootNamespace>
+    <AssemblyName>Vanity Remover</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>
