@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3CE7740E-AD7C-4C11-A88F-F1FD21FD46BB}</ProjectGuid>
+    <ProjectGuid>{8CDE0526-EEBA-431E-8264-1AE837151D0F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Geeky.VanityRemover</RootNamespace>
