@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Resources;
 
-[assembly: AssemblyTitle("Vanity Remover - WinForms GUI")]
+[assembly: AssemblyTitle("Vanity Remover - Core")]
 [assembly: AssemblyDescription("Remove folders with vanity within.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Geeky Productions")]
