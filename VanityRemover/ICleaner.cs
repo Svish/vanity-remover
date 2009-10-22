@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace GeekyProductions.FolderVanityRemover
+namespace Geeky.VanityRemover
 {
     /// <summary>
     /// A directory cleaner.

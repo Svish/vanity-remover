@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace GeekyProductions.FolderVanityRemover
+namespace Geeky.VanityRemover
 {
     /// <summary>
     /// Provides data for the <see cref="ICleaner.CleaningDone"/> event.
@@ -41,10 +41,10 @@ namespace GeekyProductions.FolderVanityRemover
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, 
-                "{0} folders scanned.{1}{2} folders removed.", 
-                Total, 
-                Environment.NewLine, 
-                Deleted);
+                                 "{0} folders scanned.{1}{2} folders removed.", 
+                                 Total, 
+                                 Environment.NewLine, 
+                                 Deleted);
         }
     }
 }

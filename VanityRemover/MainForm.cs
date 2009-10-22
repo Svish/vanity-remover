@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace GeekyProductions.FolderVanityRemover
+namespace Geeky.VanityRemover
 {
     /// <summary>
     /// The main and only form of this application.

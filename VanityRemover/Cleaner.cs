@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace GeekyProductions.FolderVanityRemover
+namespace Geeky.VanityRemover
 {
     /// <summary>
     /// Cleans out empty directories.

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace GeekyProductions.FolderVanityRemover
+namespace Geeky.VanityRemover
 {
     /// <summary>
     /// Easy access to embedded resources
