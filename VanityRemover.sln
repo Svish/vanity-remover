@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanityRemover", "VanityRemover\VanityRemover.csproj", "{3CE7740E-AD7C-4C11-A88F-F1FD21FD46BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanityRemover.WinForms", "VanityRemover\VanityRemover.WinForms.csproj", "{3CE7740E-AD7C-4C11-A88F-F1FD21FD46BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
