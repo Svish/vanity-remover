@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace GeekyProductions.FolderVanityRemover
 {
@@ -10,6 +11,11 @@ namespace GeekyProductions.FolderVanityRemover
         private readonly uint deleted;
         private readonly uint total;
 
+        /// <summary>
+        /// Creates a new <see cref="CleaningDoneEventArgs"/>.
+        /// </summary>
+        /// <param name="deleted">Number of directories that were deleted.</param>
+        /// <param name="total">Number of directories that were scanned in total.</param>
         public CleaningDoneEventArgs(uint deleted, uint total)
         {
             this.deleted = deleted;
@@ -30,6 +36,15 @@ namespace GeekyProductions.FolderVanityRemover
         public uint Deleted
         {
             get { return deleted; }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, 
+                "{0} folders scanned.{1}{2} folders removed.", 
+                Total, 
+                Environment.NewLine, 
+                Deleted);
         }
     }
 }

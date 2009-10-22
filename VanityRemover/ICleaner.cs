@@ -23,6 +23,7 @@ namespace GeekyProductions.FolderVanityRemover
         /// <summary>
         /// Raised when cleaning is done.
         /// </summary>
+        // No ReSharper, it is invoked...
         event EventHandler<CleaningDoneEventArgs> CleaningDone;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Security;
+using System.Linq;
 using System.Threading;
-using System.Collections.Generic;
 
 namespace GeekyProductions.FolderVanityRemover
 {
@@ -13,14 +13,15 @@ namespace GeekyProductions.FolderVanityRemover
     {
         // Events
         private event EventHandler<CleaningDoneEventArgs> CleaningDone = (s, e) => { };
-        
-        // Threading
-        private readonly object padLock = new object();
-        private readonly SynchronizationContext context;
 
+        // Threading
         private Thread cleaningThread;
-        private volatile bool isCleaning;
+        private readonly SynchronizationContext context;
+        private readonly object padLock = new object();
+
+        // Control
         private volatile bool cancel;
+        private volatile bool isCleaning;
 
         // Counters
         private volatile uint totalCount;
@@ -39,24 +40,25 @@ namespace GeekyProductions.FolderVanityRemover
             cancel = false;
         }
 
+
         #region ICleaner Members
 
         bool ICleaner.Clean(DirectoryInfo directory)
         {
             // Check if cleaning already
-            lock(padLock)
+            lock (padLock)
             {
-                if(isCleaning)
+                if (isCleaning)
                     return false;
                 isCleaning = true;
             }
-            
+
             // Start the cleaning thread
             cleaningThread = new Thread(DoCleaning)
-                 {
-                     Name = "Cleaning thread",
-                     IsBackground = false,
-                 };
+                                 {
+                                     Name = "Cleaning thread",
+                                     IsBackground = false,
+                                 };
             cleaningThread.Start(directory);
 
             return true;
@@ -65,8 +67,10 @@ namespace GeekyProductions.FolderVanityRemover
 
         void ICleaner.Cancel()
         {
-            cancel = true;
+            lock (padLock)
+                cancel = true;
         }
+
 
         event EventHandler<CleaningDoneEventArgs> ICleaner.CleaningDone
         {
@@ -76,70 +80,63 @@ namespace GeekyProductions.FolderVanityRemover
 
         #endregion
 
+
         private void DoCleaning(object directory)
         {
             totalCount = 0;
             deletedCount = 0;
             cancel = false;
 
-            DeleteEmpty(directory as DirectoryInfo);
+            DeleteEmptyDirectories(directory as DirectoryInfo);
 
             context.Post(InvokeCleaningDone, new CleaningDoneEventArgs(deletedCount, totalCount));
 
-            isCleaning = false;
+            lock (padLock)
+                isCleaning = false;
         }
+
+
+        private void DeleteEmptyDirectories(DirectoryInfo directory)
+        {
+            if (cancel || !directory.Exists)
+                return;
+
+            totalCount++;
+
+            // Go recursive on all sub directories
+            try
+            {
+                foreach (var subDirectory in directory.GetDirectories())
+                    DeleteEmptyDirectories(subDirectory);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message + " (" + directory.FullName + ")");
+                return;
+            }
+
+            // Do nothing if directory is not empty
+            if (directory.GetFileSystemInfos().Any())
+                return;
+
+            // Otherwise
+            try
+            {
+                // Try to delete
+                directory.Delete();
+                deletedCount++;
+                Debug.WriteLine("Deleted: " + directory.FullName);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message + " (" + directory.FullName + ")");
+            }
+        }
+        
 
         private void InvokeCleaningDone(object e)
         {
             CleaningDone(this, e as CleaningDoneEventArgs);
-        }
-
-
-        private void DeleteEmpty(DirectoryInfo directory)
-        {
-            if(cancel)
-                return;
-            
-            totalCount++;
-
-            // Run this same method on all directories in this directory
-            try
-            {
-                foreach (var d in directory.GetDirectories())
-                    DeleteEmpty(d);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                System.Diagnostics.Debug.WriteLine("No permission: " + directory.FullName);
-                return;
-            }
-
-            // If directory has no files or folders in it
-            if (directory.GetFileSystemInfos().Length == 0)
-            {
-                try
-                {
-                    // Try to delete
-                    directory.Delete();
-
-                    // Increase counter
-                    deletedCount++;
-
-                    System.Diagnostics.Debug.WriteLine("Deleted: " + directory.FullName);
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    // Already gone for some reason...
-                }
-                catch (IOException)
-                {
-                    // Not empty...
-                }
-                catch (SecurityException)
-                {
-                    // Not permission to delete...
-                }
-            }
         }
     }
 }
