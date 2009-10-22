@@ -17,10 +17,9 @@ namespace GeekyProductions.FolderVanityRemover
 
         public static Icon GetIcon(string resourceName)
         {
-            using (var resource = GetResource(resourceName))
-                return new Icon(resource);
+            var bitmap = GetBitmap(resourceName);
+            return Icon.FromHandle(bitmap.GetHicon());
         }
-
 
 
         private static Stream GetResource(string resourceName)
