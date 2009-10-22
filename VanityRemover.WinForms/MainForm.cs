@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Geeky.VanityRemover.Core;
+using System.Drawing;
 
 namespace Geeky.VanityRemover
 {
@@ -12,6 +12,7 @@ namespace Geeky.VanityRemover
     internal partial class MainForm : Form
     {
         private readonly ICleaner cleaner;
+        private readonly IPathValidator pathValidator;
 
         /// <summary>
         /// Creates a new <see cref="MainForm"/>.
@@ -20,12 +21,11 @@ namespace Geeky.VanityRemover
         {
             InitializeComponent();
 
-            // Set icons
             Icon = Resources.Application;
-            browseButton.Image = Resources.Browse;
-            cleanButton.Image = Resources.Go;
+            browse.Image = Resources.Browse;
+            clean.Image = Resources.Go;
 
-            // Create cleaner
+            pathValidator = new PathValidator();
             cleaner = new Cleaner
                           {
                               Context = SynchronizationContext.Current,
@@ -36,32 +36,32 @@ namespace Geeky.VanityRemover
 
 
         /// <summary>
-        /// Show folder browser dialog
+        /// Show path dialog.
         /// </summary>
         private void browseButtonClick(object sender, EventArgs e)
         {
-            folderBrowserDialog.SelectedPath = folderTextbox.Text;
+            pathDialog.SelectedPath = path.Text;
 
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                folderTextbox.Text = folderBrowserDialog.SelectedPath;
+            if (pathDialog.ShowDialog() == DialogResult.OK)
+                path.Text = pathDialog.SelectedPath;
         }
 
         /// <summary>
-        /// Start cleaner
+        /// Start cleaner.
         /// </summary>
-        private void cleanButtonClick(object sender, EventArgs e)
+        private void cleanClick(object sender, EventArgs e)
         {
             // Fix UI
             progressBar.Style = ProgressBarStyle.Marquee;
-            folderTextbox.Enabled = false;
-            browseButton.Enabled = false;
-            cleanButton.Image = Resources.Stop;
+            path.Enabled = false;
+            browse.Enabled = false;
+            clean.Image = Resources.Stop;
 
             AcceptButton = null;
-            CancelButton = cleanButton;
+            CancelButton = clean;
 
             // Start cleaner, or cancel if already running.
-            if (!cleaner.Clean(new DirectoryInfo(folderTextbox.Text)))
+            if (!cleaner.Clean(path.Text))
                 cleaner.Cancel();
 
         }
@@ -76,11 +76,11 @@ namespace Geeky.VanityRemover
             
             MessageBox.Show(e.ToString(), "Cleaning done", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            folderTextbox.Enabled = true;
-            browseButton.Enabled = true;
-            cleanButton.Image = Resources.Go;
+            path.Enabled = true;
+            browse.Enabled = true;
+            clean.Image = Resources.Go;
 
-            AcceptButton = cleanButton;
+            AcceptButton = clean;
             CancelButton = null;
         }
 
@@ -97,13 +97,13 @@ namespace Geeky.VanityRemover
                     return;
 
                 var filename = files[0];
-                if (Directory.Exists(filename))
-                    folderTextbox.Text = filename;
+                if (pathValidator.IsValid(filename))
+                    path.Text = filename;
             }
         }
 
         /// <summary>
-        /// Drag Enter
+        /// Drag Enter.
         /// </summary>
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
@@ -114,11 +114,22 @@ namespace Geeky.VanityRemover
         }
 
         /// <summary>
-        /// Folder text changed
+        /// Folder text changed.
         /// </summary>
-        private void folderTextbox_TextChanged(object sender, EventArgs e)
+        private void pathTextChanged(object sender, EventArgs e)
         {
-            cleanButton.Enabled = Directory.Exists(folderTextbox.Text);
+            var isValid = pathValidator.IsValid(path.Text);
+
+            clean.Enabled = isValid;
+            path.BackColor = isValid ? Color.AliceBlue : Color.LightCoral;
+        }
+
+        /// <summary>
+        /// Cancel on close.
+        /// </summary>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cleaner.Cancel();
         }
     }
 }

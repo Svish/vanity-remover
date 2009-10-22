@@ -53,6 +53,19 @@ namespace Geeky.VanityRemover.Core
 
 
         #region ICleaner Members
+        
+        void ICleaner.Cancel()
+        {
+            lock (padLock)
+                cancel = true;
+        }
+
+
+        event EventHandler<CleaningDoneEventArgs> ICleaner.CleaningDone
+        {
+            add { lock (padLock) CleaningDone += value; }
+            remove { lock (padLock) CleaningDone -= value; }
+        }
 
         bool ICleaner.Clean(DirectoryInfo directory)
         {
@@ -66,27 +79,13 @@ namespace Geeky.VanityRemover.Core
 
             // Start the cleaning thread
             cleaningThread = new Thread(DoCleaning)
-                                 {
-                                     Name = "Cleaning thread",
-                                     IsBackground = false,
-                                 };
+            {
+                Name = "Cleaning thread",
+                IsBackground = false,
+            };
             cleaningThread.Start(directory);
 
             return true;
-        }
-
-
-        void ICleaner.Cancel()
-        {
-            lock (padLock)
-                cancel = true;
-        }
-
-
-        event EventHandler<CleaningDoneEventArgs> ICleaner.CleaningDone
-        {
-            add { lock (padLock) CleaningDone += value; }
-            remove { lock (padLock) CleaningDone -= value; }
         }
 
         #endregion
