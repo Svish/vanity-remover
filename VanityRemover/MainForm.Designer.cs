@@ -118,7 +118,6 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(230, 150);
             this.Name = "MainForm";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Folder Vanity Remover";
             this.TopMost = true;
