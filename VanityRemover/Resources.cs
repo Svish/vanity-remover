@@ -9,6 +9,27 @@ namespace GeekyProductions.FolderVanityRemover
     /// </summary>
     internal static class Resources
     {
+        private static readonly string Base = typeof(Resources).Namespace;
+
+        public static Icon Application
+        {
+            get { return GetIcon(Base + ".Icons.trash.png"); }
+        }
+        public static Bitmap Browse
+        {
+            get { return GetBitmap(Base + ".Icons.browse.png"); }
+        }
+
+        public static Bitmap Go
+        {
+            get { return GetBitmap(Base + ".Icons.go.png"); }
+        }
+
+        public static Bitmap Stop
+        {
+            get { return GetBitmap(Base + ".Icons.stop.png"); }
+        }
+
         public static Bitmap GetBitmap(string resourceName)
         {
             using (var resource = GetResource(resourceName))

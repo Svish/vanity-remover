@@ -20,9 +20,9 @@ namespace GeekyProductions.FolderVanityRemover
             InitializeComponent();
 
             // Set icons
-            Icon = Resources.GetIcon("GeekyProductions.FolderVanityRemover.Icons.trash.png");
-            browseButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.browse.png");
-            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
+            Icon = Resources.Application;
+            browseButton.Image = Resources.Browse;
+            cleanButton.Image = Resources.Go;
 
             // Create cleaner
             cleaner = new Cleaner(SynchronizationContext.Current);
@@ -51,7 +51,7 @@ namespace GeekyProductions.FolderVanityRemover
             progressBar.Style = ProgressBarStyle.Marquee;
             folderTextbox.Enabled = false;
             browseButton.Enabled = false;
-            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.stop.png");
+            cleanButton.Image = Resources.Stop;
 
             AcceptButton = null;
             CancelButton = cleanButton;
@@ -74,7 +74,7 @@ namespace GeekyProductions.FolderVanityRemover
 
             folderTextbox.Enabled = true;
             browseButton.Enabled = true;
-            cleanButton.Image = Resources.GetBitmap("GeekyProductions.FolderVanityRemover.Icons.go.png");
+            cleanButton.Image = Resources.Go;
 
             AcceptButton = cleanButton;
             CancelButton = null;
