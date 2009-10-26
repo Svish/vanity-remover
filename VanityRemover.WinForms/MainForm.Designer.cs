@@ -54,7 +54,7 @@
             this.path.Name = "path";
             this.path.Size = new System.Drawing.Size(175, 20);
             this.path.TabIndex = 1;
-            this.path.TextChanged += new System.EventHandler(this.PathTextChanged);
+            this.path.TextChanged += new System.EventHandler(this.PathChanged);
             // 
             // pathDialog
             // 
@@ -158,8 +158,8 @@
             this.Name = "MainForm";
             this.Text = "Vanity remover";
             this.TopMost = true;
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.SomethingDropped);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.SomethingEntered);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
