@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 
 namespace Geeky.VanityRemover.Core
 {
@@ -14,16 +13,16 @@ namespace Geeky.VanityRemover.Core
         /// <summary>
         /// Creates a new <see cref="CleaningDoneEventArgs"/>.
         /// </summary>
-        /// <param name="deleted">Number of directories that were deleted.</param>
         /// <param name="total">Number of directories that were scanned in total.</param>
-        public CleaningDoneEventArgs(uint deleted, uint total)
+        /// <param name="deleted">Number of directories that were deleted.</param>
+        public CleaningDoneEventArgs(uint total, uint deleted)
         {
             this.deleted = deleted;
             this.total = total;
         }
 
         /// <summary>
-        /// Total number of directories scanned.
+        /// Total number of scanned directories.
         /// </summary>
         public uint Total
         {
@@ -31,20 +30,11 @@ namespace Geeky.VanityRemover.Core
         }
 
         /// <summary>
-        /// Number of directories that were deleted.
+        /// Total number of deleted directories.
         /// </summary>
         public uint Deleted
         {
             get { return deleted; }
-        }
-
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, 
-                                 "{0} folders scanned.{1}{2} folders removed.", 
-                                 Total, 
-                                 Environment.NewLine, 
-                                 Deleted);
         }
     }
 }

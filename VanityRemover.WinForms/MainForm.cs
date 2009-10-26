@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Geeky.VanityRemover.Core;
-using System.Drawing;
 
 namespace Geeky.VanityRemover
 {
@@ -21,24 +23,36 @@ namespace Geeky.VanityRemover
         {
             InitializeComponent();
 
-            Icon = Resources.Application;
-            browse.Image = Resources.Browse;
-            clean.Image = Resources.Go;
-
             pathValidator = new PathValidator();
+
             cleaner = new Cleaner
                           {
                               Context = SynchronizationContext.Current,
                           };
             cleaner.CleaningDone += CleaningDone;
 
+            Running = false;
+        }
+
+        /// <summary>
+        /// Updates UI accordingly.
+        /// </summary>
+        private bool Running
+        {
+            set
+            {
+                progressBar.Style = value ? ProgressBarStyle.Marquee : ProgressBarStyle.Blocks;
+
+                path.Enabled = !value;
+                browse.Enabled = !value;
+
+                start.Enabled = !value && pathValidator.IsValid(path.Text);
+                cancel.Enabled = value;
+            }
         }
 
 
-        /// <summary>
-        /// Show path dialog.
-        /// </summary>
-        private void browseButtonClick(object sender, EventArgs e)
+        private void BrowseClicked(object sender, EventArgs e)
         {
             pathDialog.SelectedPath = path.Text;
 
@@ -46,47 +60,47 @@ namespace Geeky.VanityRemover
                 path.Text = pathDialog.SelectedPath;
         }
 
-        /// <summary>
-        /// Start cleaner.
-        /// </summary>
-        private void cleanClick(object sender, EventArgs e)
+
+        private void CancelClicked(object sender, EventArgs e)
         {
-            // Fix UI
-            progressBar.Style = ProgressBarStyle.Marquee;
-            path.Enabled = false;
-            browse.Enabled = false;
-            clean.Image = Resources.Stop;
-
-            AcceptButton = null;
-            CancelButton = clean;
-
-            // Start cleaner, or cancel if already running.
-            if (!cleaner.Clean(path.Text))
-                cleaner.Cancel();
-
+            cancel.Enabled = false;
+            cleaner.Cancel();
         }
 
 
-        /// <summary>
-        /// Cleaning done
-        /// </summary>
+        private void StartClicked(object sender, EventArgs e)
+        {
+            var directory = new DirectoryInfo(path.Text);
+
+            var caption = "Please confirm";
+            var message = "All empty folders will be deleted from" + Environment.NewLine + Environment.NewLine + directory.FullName;
+
+            var result = MessageBox.Show(this, message, caption,
+                            MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+
+            if (result == DialogResult.OK)
+            {
+                Running = true;
+                cleaner.Clean(directory);
+            }
+        }
+
+
         private void CleaningDone(object sender, CleaningDoneEventArgs e)
         {
-            progressBar.Style = ProgressBarStyle.Blocks;
-            
-            MessageBox.Show(e.ToString(), "Cleaning done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Running = false;
 
-            path.Enabled = true;
-            browse.Enabled = true;
-            clean.Image = Resources.Go;
+            var caption = "Done c'',)";
+            var message = string.Format(CultureInfo.InvariantCulture,
+                "{0} folders scanned.{1}{2} folders removed.",
+                e.Total,
+                Environment.NewLine,
+                e.Deleted);
 
-            AcceptButton = clean;
-            CancelButton = null;
+            MessageBox.Show(this, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        /// <summary>
-        /// Drag Drop
-        /// </summary>
+
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -102,32 +116,25 @@ namespace Geeky.VanityRemover
             }
         }
 
-        /// <summary>
-        /// Drag Enter.
-        /// </summary>
+
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
-            // Only accept files
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop)
                            ? DragDropEffects.Link
                            : DragDropEffects.None;
         }
 
-        /// <summary>
-        /// Folder text changed.
-        /// </summary>
-        private void pathTextChanged(object sender, EventArgs e)
+
+        private void PathTextChanged(object sender, EventArgs e)
         {
             var isValid = pathValidator.IsValid(path.Text);
 
-            clean.Enabled = isValid;
+            start.Enabled = isValid;
             path.BackColor = isValid ? Color.AliceBlue : Color.LightCoral;
         }
 
-        /// <summary>
-        /// Cancel on close.
-        /// </summary>
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
             cleaner.Cancel();
         }

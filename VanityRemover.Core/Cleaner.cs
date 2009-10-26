@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace Geeky.VanityRemover.Core
@@ -9,24 +8,20 @@ namespace Geeky.VanityRemover.Core
     /// <summary>
     /// Cleans out empty directories.
     /// </summary>
-    public class Cleaner : ICleaner, ISynchronizationAware
+    public class Cleaner : ICleaner, IContextAware
     {
-        // Events
         private event EventHandler<CleaningDoneEventArgs> CleaningDone = (s, e) => { };
 
-        // Threading
         private readonly object padLock = new object();
-        private SynchronizationContext context;
+
         private Thread cleaningThread;
+        private SynchronizationContext context;
 
-        // Control
-        private volatile bool cancel;
         private volatile bool isCleaning;
+        private volatile bool cancel;
 
-        // Counters
-        private volatile uint totalCount;
-        private volatile uint deletedCount;
-
+        private volatile uint totalDeleted;
+        private volatile uint totalScanned;
 
 
         /// <summary>
@@ -35,25 +30,25 @@ namespace Geeky.VanityRemover.Core
         public Cleaner()
         {
             context = new SynchronizationContext();
-            isCleaning = false;
-            cancel = false;
         }
-
-
-        #region ISynchronizationAware Members
-
-        public SynchronizationContext Context
-        {
-            get { return context; }
-            set { context = value ?? new SynchronizationContext(); }
-        }
-
-        #endregion
-
 
 
         #region ICleaner Members
-        
+
+        bool ICleaner.Clean(DirectoryInfo directory)
+        {
+            lock (padLock)
+            {
+                if (isCleaning)
+                    return false;
+                isCleaning = true;
+            }
+
+            StartCleaningThread(directory);
+            return true;
+        }
+
+
         void ICleaner.Cancel()
         {
             lock (padLock)
@@ -67,53 +62,50 @@ namespace Geeky.VanityRemover.Core
             remove { lock (padLock) CleaningDone -= value; }
         }
 
-        bool ICleaner.Clean(DirectoryInfo directory)
+        #endregion
+
+
+        #region IContextAware Members
+
+        public SynchronizationContext Context
         {
-            // Check if cleaning already
-            lock (padLock)
-            {
-                if (isCleaning)
-                    return false;
-                isCleaning = true;
-            }
-
-            // Start the cleaning thread
-            cleaningThread = new Thread(DoCleaning)
-            {
-                Name = "Cleaning thread",
-                IsBackground = false,
-            };
-            cleaningThread.Start(directory);
-
-            return true;
+            get { return context; }
+            set { context = value ?? new SynchronizationContext(); }
         }
 
         #endregion
 
 
+        private void StartCleaningThread(DirectoryInfo directory)
+        {
+            cleaningThread = new Thread(DoCleaning)
+                                 {
+                                     Name = "Cleaning thread",
+                                     IsBackground = false,
+                                 };
+            cleaningThread.Start(directory);
+        }
+
+
         private void DoCleaning(object directory)
         {
-            totalCount = 0;
-            deletedCount = 0;
+            totalScanned = 0;
+            totalDeleted = 0;
             cancel = false;
 
             DeleteEmptyDirectories(directory as DirectoryInfo);
 
-            context.Post(InvokeCleaningDone, new CleaningDoneEventArgs(deletedCount, totalCount));
-
-            lock (padLock)
-                isCleaning = false;
+            DoneCleaning();
         }
 
 
         private void DeleteEmptyDirectories(DirectoryInfo directory)
         {
+            totalScanned++;
+
             if (cancel || !directory.Exists)
                 return;
 
-            totalCount++;
-
-            // Go recursive on all sub directories
             try
             {
                 foreach (var subDirectory in directory.GetDirectories())
@@ -125,16 +117,13 @@ namespace Geeky.VanityRemover.Core
                 return;
             }
 
-            // Do nothing if directory is not empty
-            if (directory.GetFileSystemInfos().Any())
+            if (directory.IsNotEmpty())
                 return;
 
-            // Otherwise
             try
             {
-                // Try to delete
                 directory.Delete();
-                deletedCount++;
+                totalDeleted++;
                 Debug.WriteLine("Deleted: " + directory.FullName);
             }
             catch (Exception e)
@@ -142,11 +131,20 @@ namespace Geeky.VanityRemover.Core
                 Debug.WriteLine(e.Message + " (" + directory.FullName + ")");
             }
         }
-        
 
-        private void InvokeCleaningDone(object e)
+
+        private void DoneCleaning()
         {
-            CleaningDone(this, e as CleaningDoneEventArgs);
+            InvokeCleaningDone();
+
+            lock (padLock)
+                isCleaning = false;
+        }
+
+        private void InvokeCleaningDone()
+        {
+            var eventArgs = new CleaningDoneEventArgs(totalScanned, totalDeleted);
+            context.Post(e => CleaningDone(this, e as CleaningDoneEventArgs), eventArgs);
         }
     }
 }
