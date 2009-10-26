@@ -9,21 +9,19 @@ namespace Geeky.VanityRemover.Core
     public interface ICleaner
     {
         /// <summary>
-        /// Starts the cleaning of a path.
+        /// Starts the cleaning of the selected path.
         /// </summary>
-        /// <param name="path">Path to clean</param>
         /// <returns>False if already busy; otherwise true.</returns>
-        bool Clean(string path);
+        bool Clean(DirectoryInfo directory);
 
         /// <summary>
-        /// Asks the cleaning process to cancel.
+        /// Tells the cleaning thread to stop.
         /// </summary>
         void Cancel();
 
         /// <summary>
         /// Raised when cleaning is done.
         /// </summary>
-        // No ReSharper, it is invoked...
         event EventHandler<CleaningDoneEventArgs> CleaningDone;
     }
 }
