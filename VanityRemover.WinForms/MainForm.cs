@@ -31,6 +31,8 @@ namespace Geeky.VanityRemover
                           };
             cleaner.CleaningDone += CleaningDone;
 
+            ActiveControl = path;
+
             Running = false;
         }
 
@@ -101,7 +103,7 @@ namespace Geeky.VanityRemover
         }
 
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private void SomethingDropped(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -117,7 +119,7 @@ namespace Geeky.VanityRemover
         }
 
 
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        private void SomethingEntered(object sender, DragEventArgs e)
         {
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop)
                            ? DragDropEffects.Link
@@ -125,7 +127,7 @@ namespace Geeky.VanityRemover
         }
 
 
-        private void PathTextChanged(object sender, EventArgs e)
+        private void PathChanged(object sender, EventArgs e)
         {
             var isValid = pathValidator.IsValid(path.Text);
 
