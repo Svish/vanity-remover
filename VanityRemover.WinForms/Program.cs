@@ -9,11 +9,15 @@ namespace Geeky.VanityRemover
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
+            var arg = args.Length > 0 
+                ? args[0] 
+                : "";
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new Main(arg));
         }
     }
 }
