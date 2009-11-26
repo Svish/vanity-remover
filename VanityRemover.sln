@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanityRemover.WinForms", "V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanityRemover.Core", "VanityRemover.Core\VanityRemover.Core.csproj", "{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanityRemover.Core.Tests", "VanityRemover.Core.Tests\VanityRemover.Core.Tests.csproj", "{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
