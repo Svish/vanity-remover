@@ -79,7 +79,7 @@
             // 
             this.start.AccessibleDescription = "Starts the cleaning process.";
             this.start.AccessibleName = "Start";
-            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.start.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.start.Enabled = false;
             this.start.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
@@ -123,7 +123,7 @@
             // 
             this.cancel.AccessibleDescription = "Cancels the cleaning process.";
             this.cancel.AccessibleName = "Cancel";
-            this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancel.Enabled = false;
             this.cancel.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
