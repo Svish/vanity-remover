@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -8,143 +7,145 @@ namespace Geeky.VanityRemover.Core
     /// <summary>
     /// Cleans out empty directories.
     /// </summary>
-    public class Cleaner : ICleaner, IContextAware
+    public class Cleaner
     {
-        private event EventHandler<CleaningDoneEventArgs> CleaningDone = (s, e) => { };
-
-        private readonly object padLock = new object();
-
-        private Thread cleaningThread;
-        private SynchronizationContext context;
-
-        private volatile bool isCleaning;
+        private SynchronizationContext context = new SynchronizationContext();
         private volatile bool cancel;
-
-        private volatile uint totalDeleted;
-        private volatile uint totalScanned;
 
 
         /// <summary>
-        /// Creates a new <see cref="Cleaner"/>.
+        /// Raised when the async cleaning is done.
         /// </summary>
-        public Cleaner()
-        {
-            context = new SynchronizationContext();
-        }
+        public event EventHandler<EventArgs> CleaningDone = (s, e) => { };
 
 
-        #region ICleaner Members
-
-        bool ICleaner.Clean(DirectoryInfo directory)
-        {
-            lock (padLock)
-            {
-                if (isCleaning)
-                    return false;
-                isCleaning = true;
-            }
-
-            StartCleaningThread(directory);
-            return true;
-        }
+        /// <summary>
+        /// Raised when a directory has been scanned and acted upon.
+        /// </summary>
+        public event EventHandler<DirectoryScannedEventArgs> DirectoryScanned = (s, e) => { };
 
 
-        void ICleaner.Cancel()
-        {
-            lock (padLock)
-                cancel = true;
-        }
-
-
-        event EventHandler<CleaningDoneEventArgs> ICleaner.CleaningDone
-        {
-            add { lock (padLock) CleaningDone += value; }
-            remove { lock (padLock) CleaningDone -= value; }
-        }
-
-        #endregion
-
-
-        #region IContextAware Members
-
+        /// <summary>
+        /// The <see cref="SynchronizationContext"/> to use
+        /// when raising events.
+        /// </summary>
         public SynchronizationContext Context
         {
             get { return context; }
-            set { context = value ?? new SynchronizationContext(); }
-        }
-
-        #endregion
-
-
-        private void StartCleaningThread(DirectoryInfo directory)
-        {
-            cleaningThread = new Thread(DoCleaning)
-                                 {
-                                     Name = "Cleaning thread",
-                                     IsBackground = false,
-                                 };
-            cleaningThread.Start(directory);
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+                context = value;
+            }
         }
 
 
-        private void DoCleaning(object directory)
+        /// <summary>
+        /// Cancel all cleaning jobs.
+        /// </summary>
+        public void Cancel()
         {
-            totalScanned = 0;
-            totalDeleted = 0;
+            cancel = true;
+        }
+
+
+        /// <summary>
+        /// Starts to clean the given directory. Returns immidiately.
+        /// </summary>
+        public void StartCleaning(FreshDirectory directory)
+        {
+            var thread = new Thread(Clean)
+            {
+                Name = "Cleaning: " + directory.FullName,
+                IsBackground = false,
+            };
+
+            thread.Start(directory);
+        }
+        
+        private void Clean(object directory)
+        {
+            Clean(directory as FreshDirectory);
+        }
+
+
+        /// <summary>
+        /// Cleans the given directory.
+        /// </summary>
+        public void Clean(FreshDirectory directory)
+        {
+            DoClean(directory);
+            InvokeCleaningDone();
             cancel = false;
-
-            DeleteEmptyDirectories(directory as DirectoryInfo);
-
-            DoneCleaning();
         }
 
 
-        private void DeleteEmptyDirectories(DirectoryInfo directory)
+        private void DoClean(FreshDirectory directory)
         {
-            totalScanned++;
+            // Check for null
+            if (directory == null)
+                throw new ArgumentNullException("directory");
 
-            if (cancel || !directory.Exists)
+            // Check for cancel
+            if (cancel)
+            {
+                InvokeDirectoryScanned(new DirectorySkippedEventArgs(directory,
+                    new UserCancelledException()));
                 return;
+            }
 
+            // Check that directory exists
+            if (!directory.Exists)
+            {
+                InvokeDirectoryScanned(new DirectorySkippedEventArgs(directory,
+                    new DirectoryNotFoundException("Directory not found.")));
+                return;
+            }
+
+            // Try to delete all sub directories
             try
             {
-                foreach (var subDirectory in directory.GetDirectories())
-                    DeleteEmptyDirectories(subDirectory);
+                foreach (var subDirectory in directory.GetSubDirectories())
+                    DoClean(subDirectory);
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message + " (" + directory.FullName + ")");
+                InvokeDirectoryScanned(new DirectorySkippedEventArgs(directory, e));
                 return;
             }
 
-            if (directory.IsNotEmpty())
+            // Check for cancel again
+            if (cancel)
+            {
+                InvokeDirectoryScanned(new DirectorySkippedEventArgs(directory,
+                    new UserCancelledException()));
                 return;
+            }
 
+            // Try to delete the directory
             try
             {
                 directory.Delete();
-                totalDeleted++;
-                Debug.WriteLine("Deleted: " + directory.FullName);
+                InvokeDirectoryScanned(new DirectoryDeletedEventArgs(directory));
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message + " (" + directory.FullName + ")");
+                InvokeDirectoryScanned(new DirectorySkippedEventArgs(directory, e));
+                return;
             }
         }
 
 
-        private void DoneCleaning()
+        private void InvokeDirectoryScanned(DirectoryScannedEventArgs result)
         {
-            InvokeCleaningDone();
-
-            lock (padLock)
-                isCleaning = false;
+            context.Send(e => DirectoryScanned(this, (DirectoryScannedEventArgs)e), result);
         }
+
 
         private void InvokeCleaningDone()
         {
-            var eventArgs = new CleaningDoneEventArgs(totalScanned, totalDeleted);
-            context.Post(e => CleaningDone(this, e as CleaningDoneEventArgs), eventArgs);
+            context.Send(e => CleaningDone(this, (EventArgs)e), EventArgs.Empty);
         }
     }
 }
