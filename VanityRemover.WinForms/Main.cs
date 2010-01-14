@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Geeky.VanityRemover.Core;
+using Geeky.VanityRemover.Core.Extensions;
 
 namespace Geeky.VanityRemover
 {
@@ -13,26 +13,28 @@ namespace Geeky.VanityRemover
     /// </summary>
     internal partial class Main : Form
     {
-        private readonly ICleaner cleaner;
-        private readonly IPathValidator pathValidator;
+        private readonly Cleaner cleaner;
+
 
         /// <summary>
         /// Creates a new <see cref="Main"/>.
         /// </summary>
-        public Main(string initialDirectory)
+        public Main(string initialDirectory, Cleaner cleaner)
         {
             InitializeComponent();
 
-            pathValidator = new PathValidator();
-            cleaner = new Cleaner { Context = SynchronizationContext.Current };
-            cleaner.CleaningDone += CleaningDone;
+            this.cleaner = cleaner;
+            this.cleaner.Context = SynchronizationContext.Current;
+            this.cleaner.CleaningDone += CleaningDone;
+            this.cleaner.DirectoryScanned += DirectoryScanned;
 
             path.Text = initialDirectory ?? "";
             path.SelectionStart = 0;
 
-            ActiveControl = path.Text == "" ? (Control) path : start;
+            ActiveControl = path.Text == "" ? (Control)path : start;
             Running = false;
         }
+
 
         /// <summary>
         /// Updates UI accordingly.
@@ -46,11 +48,21 @@ namespace Geeky.VanityRemover
                 path.Enabled = !value;
                 browse.Enabled = !value;
 
-                start.Enabled = !value && pathValidator.IsValid(path.Text);
+                start.Enabled = !value && path.Text.IsCleanablePath();
                 cancel.Enabled = value;
             }
         }
 
+
+        private void PathChanged(object sender, EventArgs e)
+        {
+            var isValid = path.Text.IsCleanablePath();
+
+            start.Enabled = isValid;
+            path.BackColor = isValid ? Color.AliceBlue : Color.LightCoral;
+        }
+
+        #region EventHandler: Buttons
 
         private void BrowseClicked(object sender, EventArgs e)
         {
@@ -70,36 +82,58 @@ namespace Geeky.VanityRemover
 
         private void StartClicked(object sender, EventArgs e)
         {
-            var directory = new DirectoryInfo(path.Text);
+            var directory = new FreshDirectory(path.Text);
 
-            var caption = "Please confirm";
-            var message = "All empty folders will be deleted from" + Environment.NewLine + Environment.NewLine + directory.FullName;
-
-            var result = MessageBox.Show(this, message, caption,
-                            MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-
-            if (result == DialogResult.OK)
+            if (Dialogs.ConfirmClean(this, directory) == DialogResult.OK)
             {
+                scannedDirectories = 0;
+                deletedDirectories = 0;
+
                 Running = true;
-                cleaner.Clean(directory);
+                cleaner.StartCleaning(directory);
             }
         }
 
+        #endregion
 
-        private void CleaningDone(object sender, CleaningDoneEventArgs e)
+
+        private int scannedDirectories;
+        private int deletedDirectories;
+
+
+        #region EventHandler: Cleaning Done + Directory Scanned
+
+
+        private void DirectoryScanned(object sender, DirectoryScannedEventArgs e)
         {
+            scannedDirectories += 1;
+            if (e is DirectoryDeletedEventArgs)
+                deletedDirectories += 1;
+        }
+
+
+        private void CleaningDone(object sender, EventArgs e)
+        {
+            Console.WriteLine("Done. {0} folders scanned. {1} were removed.",
+                scannedDirectories,
+                deletedDirectories);
+
             Running = false;
 
             var caption = "Done c'',)";
             var message = string.Format(CultureInfo.InvariantCulture,
-                "{0} folders scanned.{1}{2} folders removed.",
-                e.Total,
-                Environment.NewLine,
-                e.Deleted);
+                                        "{0} folders scanned.{1}{2} folders removed.",
+                                        scannedDirectories,
+                                        Environment.NewLine,
+                                        deletedDirectories);
 
             MessageBox.Show(this, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        #endregion
+
+
+        #region EventHandler: Drag + Drop
 
         private void SomethingDropped(object sender, DragEventArgs e)
         {
@@ -111,7 +145,7 @@ namespace Geeky.VanityRemover
                     return;
 
                 var filename = files[0];
-                if (pathValidator.IsValid(filename))
+                if (filename.IsCleanablePath())
                     path.Text = filename;
             }
         }
@@ -124,19 +158,17 @@ namespace Geeky.VanityRemover
                            : DragDropEffects.None;
         }
 
+        #endregion
 
-        private void PathChanged(object sender, EventArgs e)
-        {
-            var isValid = pathValidator.IsValid(path.Text);
 
-            start.Enabled = isValid;
-            path.BackColor = isValid ? Color.AliceBlue : Color.LightCoral;
-        }
-
+        #region EventHandler: FormClosing
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
             cleaner.Cancel();
         }
+
+        #endregion
+
     }
 }

@@ -1,0 +1,48 @@
+*1.6*
+
+* Created a separate console version of the application. Can be useful as part of a script or to run as a windows task or linux cronjob or something like that.
+* Deleted directories will be written to a log-file (and printed to the console in case of the console version).
+* It now ignores directories that are marked as hidden, system, et cetera. Can be overridden with a switch.
+* Added support for some switches:
+** -q: Run, clean and quit without requiring any user intervention. The directory to clean must be supplied as a command-line argument for this to do any good.
+** -s: No output. No console printing, no logging, no nothing. (For the gui version, the gui will still be visible of course, but no logging will be done).
+** -a: Clean all directories including hidden directories, system directories and so on.
+** -v: Be verbose by also outputting all the directories that were _not_ deleted and why.
+** -h: Output help about the switches.
+
+*1.5*
+
+* You can now drag and drop a folder onto the executable and it will open up with that folder as initial path. Isn't that just fantastic, or what??
+
+*1.4*
+
+* Shuffled the user interface a bit.
+* Added a confirmation dialog.
+* Added an icon to the executable.
+* Changed how the icons are loaded in the user interface. (Hopefully fixes: [workitem:4495])
+
+* Otherwise some various refactoring has of course occurred in the code base.
+
+*1.3*
+
+* No longer crashing when trying to read a folder with no access.
+* Changed the icons and made the application icon show up in the task bar.
+* The cleaning process can now be cancelled.
+* When finished, it will report how many folders were scanned and deleted.
+
+* Code base has been refactored quite a bit.
+* TFS bindings have been broken (I've started using subversion instead).
+
+*1.2*
+
+* Smaller changes to the UI.
+* Some fixing here and there.
+* Removed some unused references.
+
+*1.1*
+
+* Fixed a stupid error in 1.0.
+
+*1.0*
+
+* First release.

@@ -8,7 +8,7 @@
     <ProjectGuid>{3BBE04B9-E676-4C6A-BA7A-832F13246AA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VanityRemover.Core.Tests</RootNamespace>
+    <RootNamespace>Geeky.VanityRemover.Core.Tests</RootNamespace>
     <AssemblyName>VanityRemover.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,7 +41,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanerTests.cs" />
+    <Compile Include="FreshDirectoryTests.cs" />
+    <Compile Include="OptionsParserTests.cs" />
+    <Compile Include="OptionsTests.cs" />
+    <Compile Include="StringExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VanityRemover.Core\VanityRemover.Core.csproj">
+      <Project>{4B3AA543-F1A5-4613-BC8F-2147A0B74EE5}</Project>
+      <Name>VanityRemover.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

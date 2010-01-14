@@ -35,16 +35,20 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cleaner.cs" />
-    <Compile Include="CleaningDoneEventArgs.cs" />
-    <Compile Include="FileSystemExtensions.cs" />
-    <Compile Include="ICleaner.cs" />
-    <Compile Include="IPath.cs" />
-    <Compile Include="IContextAware.cs" />
-    <Compile Include="PathValidator.cs" />
+    <Compile Include="DirectoryDeletedEventArgs.cs" />
+    <Compile Include="DirectoryScannedEventArgs.cs" />
+    <Compile Include="DirectorySkippedEventArgs.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FreshDirectory.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="OptionsParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserCancelledException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
