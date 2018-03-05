@@ -8,9 +8,9 @@ This application removes all sub-folders (and the folder itself) where vanity is
 
 * Download and run.
 * Select a folder, by either:
-** Typing it in to the textbox.
-** Choosing it with the folder dialog (click the button next to the textbox).
-** Drag and drop a folder from explorer unto the application.
+  * Typing it in to the textbox.
+  * Choosing it with the folder dialog (click the button next to the textbox).
+  * Drag and drop a folder from explorer unto the application.
 * Press enter or click the green arrow.
 
 ## What will happen:
